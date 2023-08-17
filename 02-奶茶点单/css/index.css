@@ -1,0 +1,96 @@
+/* 不能盲目设置宽度100%，块级盒子本身的宽度就是100%，自己再加的话设置padding会出现横向滚动条很烦 */
+/* 唉，还是尽量不要给盒子写宽高，容易出bug */
+.header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background-color: #434343;
+}
+.header .headerMain{
+    display: flex;
+    width: 80%;
+}
+.header .headerMain .images {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    
+}
+.header .headerMain .images .img {
+    flex-basis: 20%;
+    width:0;
+    border-radius: 8px;
+}
+.header .headerMain .images .img:hover{
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg);
+    -webkit-transition: -webkit-transform 0.2s linear;
+    transition: transform 0.2s linear;
+}
+
+.main{
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+}
+.main .toTop{
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+}
+.main .hidden{
+    display: none;
+}
+.main .toTop .toTopBtn {
+    padding: 4px;
+    border: 1px solid #595959;
+    border-radius: 8px;
+    width: 24px;
+    background-color: transparent;
+    color:#595959;
+    font-size: 12px;
+    cursor: pointer;
+}
+.main .main-w {
+    display: flex;
+    justify-content: center;
+}
+.main .main-w .orderForm{
+    display: flex;
+    justify-content: center;
+}
+.main .main-w .orderForm .row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+    align-items: center;
+    text-align: right;
+}
+.main .main-w .orderForm .row .tab{
+    flex-basis: 30%;
+    margin-right: 16px;
+}
+.main .main-w .orderForm .row .items {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-basis: 70%;
+}
+.main .main-w .orderForm .row .items .item{
+    margin-right: 10px;
+}
+.main .main-w .orderForm .row .btn {
+    margin: 8px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    border: none;
+    height: 32px;
+}
+.main .main-w .orderForm .row .sumit{
+    background-color: #1677ff;
+    color: white;
+}
+input {
+    margin: 0;
+}
