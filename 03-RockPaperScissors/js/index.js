@@ -58,10 +58,11 @@ const isWin = (robot, me) => {
 }
 
 const isOver = () => {
+    // console.log();
     if (roundIndex === roundSum) {
         return true
     }
-    if (countMe.win > roundSum - roundIndex || countRobot > roundSum - roundIndex) {
+    if (countMe.win > (roundSum - roundIndex) || countRobot.win > (roundSum - roundIndex)) {
         return true
     }
     return false
