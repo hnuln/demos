@@ -1,0 +1,92 @@
+body {
+    background-color: rgb(250, 226, 234);
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    padding-top: 64px;
+    align-items: center;
+    
+}
+
+.title {
+    font-size: 200%;
+}
+
+.battleWindow {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    padding: 0 30px;
+    margin-top: 100px;
+}
+
+.battleWindow p {
+    margin-top: 20px;
+}
+
+.robotInfor,
+.meInfor {
+    margin-top: 15px;
+}
+
+.robot,
+.me {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 126px;
+    height: 126px;
+}
+
+.wenhao {
+    font-size: 200%;
+}
+
+.result {
+    margin-top: 30px;
+}
+
+.message {
+    flex-basis: auto;
+    margin-top: 64px;
+    font-size: 150%;
+    font-weight: 700;
+}
+
+.gameBtn {
+    flex-basis: auto;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 32px;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+
+}
+.dialog {
+    border: 3px solid black;
+    border-radius: 5px;
+}
+.row {
+    display: flex;
+    justify-content: center;
+    margin: 0 40px;
+}
+.row button {
+    padding: 5px 15px;
+    background-color: #1677ff;
+    color: white;
+    border-radius: 5px;
+    border: none;
+}
+.confirm {
+    margin-top: 10px;
+}

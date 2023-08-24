@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/reset.css">
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+    <title>猜拳游戏</title>
+</head>
+
+<body>
+    <div class="game">
+        <h1 class="title"></h1>
+        <div class="battleWindow">
+            <div class="robot">
+                <div class="img">
+                    <span class="wenhao">?</span>
+                    <!-- <img src="./images/paper.png" alt=""> -->
+                </div>
+                <p>机器人</p>
+                <div class="robotInfor">
+                    胜：0 | 负：0
+                </div>
+            </div>
+            <div class="me">
+                <div class="img">
+                    <span class="wenhao">?</span>
+                    <!-- <img src="./images/rock.png" alt=""> -->
+                </div>
+                <p>俺</p>
+                <div class="meInfor">
+                    胜：0 | 负：0
+                </div>
+            </div>
+        </div>
+        <div class="result"></div>
+        <h2 class="message"></h2>
+        <button class="gameBtn">开始下一回合</button>
+    </div>
+    <dialog class="dialog">
+        <form method="dialog">
+            <p class="row">
+                <label for="key">请选择要出的手势：</label>
+                <select id="key">
+                    <option value="rock">石头</option>
+                    <option value="scissor">剪刀</option>
+                    <option value="paper">布</option>
+                </select>
+            </p>
+            <p class="row confirm">
+                <button value="default">确定</button>
+            </p>
+        </form>
+    </dialog>
+    <script type="text/javascript" src="./js/index.js"></script>
+</body>
+
+</html>
