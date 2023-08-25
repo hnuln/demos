@@ -99,12 +99,7 @@ body {
     border: 3px solid black;
     border-radius: 5px;
 }
-
-.initDialog {
-    width: 80%;
-}
-
-.row {
+.dialog .row {
     display: flex;
     justify-content: center;
     margin: 10px 40px;
@@ -129,14 +124,15 @@ body {
     justify-content: center;
     align-items: center;
     text-align: right;
+    margin: 10px 40px;
 }
 
 .initDialog .row .tab {
-    flex-basis: 20%;
+    flex-basis: 30%;
     margin-right: 10px;
 }
 .initDialog .row .input {
-    flex-basis: 80%;
+    flex-basis: 70%;
 }
 
 .initDialog .row .enter {
