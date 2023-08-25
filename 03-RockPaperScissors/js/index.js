@@ -1,12 +1,21 @@
-const btn = document.querySelector('.gameBtn')
+const beginBtn = document.querySelector('.beginBtn')
+const resetBtn = document.querySelector('.resetBtn')
+const gameBtn = document.querySelector('.gameBtn')
+const initDialog = document.querySelector('.initDialog')
 const dialog = document.querySelector('.dialog')
+const enterForm = document.querySelector('#enterForm')
+const selectForm = document.querySelector('#selectForm')
 const confirm = document.querySelector('.confirm button')
+const enter = document.querySelector('.enter')
+const gameName = initDialog.querySelector('input')
+const round = initDialog.querySelector('select')
 const select = dialog.querySelector('select')
 const title = document.querySelector('.title')
 const result = document.querySelector('.result')
 const message = document.querySelector('.message')
 const robotImg = document.querySelector('.robot .img')
 const meImg = document.querySelector('.me .img')
+const player = document.querySelector('.player')
 
 const robotInfor = document.querySelector('.robotInfor')
 const meInfor = document.querySelector('.meInfor')
@@ -15,7 +24,7 @@ const imgSrc = {
     paper: './images/paper.png',
     scissor: './images/scissor.png',
 }
-const roundSum = 3
+let roundSum = 3
 let roundIndex = 1
 const hand = ['rock', 'paper', 'scissor']
 
@@ -29,8 +38,10 @@ const countMe = {
     win: 0,
     fail: 0,
 }
-
-btn.addEventListener('click', () => {
+beginBtn.addEventListener('click', () => {
+    initDialog.showModal()
+})
+gameBtn.addEventListener('click', () => {
     dialog.showModal()
 })
 // 机器人出拳
@@ -62,13 +73,13 @@ const isOver = () => {
     if (roundIndex === roundSum) {
         return true
     }
-    if (countMe.win > (roundSum - roundIndex) || countRobot.win > (roundSum - roundIndex)) {
+    if (countMe.win > (roundSum - roundIndex+countRobot.win) || countRobot.win > (roundSum - roundIndex +countMe.win)) {
         return true
     }
     return false
 }
 const gameOver = () => {
-    btn.style.display = "none"
+    gameBtn.classList.add('display')
     if (countMe.win > countRobot.win) {
         message.innerHTML = ` (≧v≦)o~~好棒，恭喜${countMe.name}获得胜利！`
     } else if (countMe.win < countRobot.win) {
@@ -76,17 +87,33 @@ const gameOver = () => {
     } else {
         message.innerHTML = "不错嘛，平局了"
     }
+    resetBtn.classList.remove('display')
 }
-dialog.addEventListener('close', () => {
+selectForm.addEventListener('submit', (e) => {
+    e.preventDefault()
     const robot = robotHand()
     const value = select.value
     const me = hand.indexOf(value)
+    dialog.close()
     meImg.innerHTML = `<img src="${imgSrc[value]}" alt="">`
     title.innerHTML = `第${roundIndex}回合（共${roundSum}回合）`
     isWin(robot, me)
+    console.log(roundIndex);
     if (isOver()) {
         gameOver()
     }
     roundIndex++
-    
+})
+enterForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    countMe.name = gameName.value
+    player.innerHTML = countMe.name
+    // console.log(typeof round.value);
+    roundSum = parseInt(round.value)
+    initDialog.close()
+    gameBtn.classList.remove('display')
+    beginBtn.classList.add('display')
+})
+resetBtn.addEventListener('click', () => {
+    location.reload()
 })

@@ -28,7 +28,7 @@
                     <span class="wenhao">?</span>
                     <!-- <img src="./images/rock.png" alt=""> -->
                 </div>
-                <p>俺</p>
+                <p class="player">俺</p>
                 <div class="meInfor">
                     胜：0 | 负：0
                 </div>
@@ -36,10 +36,12 @@
         </div>
         <div class="result"></div>
         <h2 class="message"></h2>
-        <button class="gameBtn">开始下一回合</button>
+        <button class="beginBtn">开始游戏</button>
+        <button class="resetBtn display">重新开始</button>
+        <button class="gameBtn display">开始下一回合</button>
     </div>
     <dialog class="dialog">
-        <form method="dialog">
+        <form id="selectForm">
             <p class="row">
                 <label for="key">请选择要出的手势：</label>
                 <select id="key">
@@ -50,6 +52,30 @@
             </p>
             <p class="row confirm">
                 <button value="default">确定</button>
+            </p>
+        </form>
+    </dialog>
+    <dialog class="initDialog">
+        <form id="enterForm">
+            <p class="row">
+                <label for="name" class="tab">请输入游戏昵称：</label>
+                <input type="text" id="name" placeholder="昵称由1~10个字符组成" class="input" required>
+            </p>
+            <p class="row">
+                <label for="gameNum" class="tab">请选择游戏回合：</label>
+                <select id="gameNum" class="input">
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                </select>
+            </p>
+            <p class="row">
+                <button class="enter">进入游戏</button>
             </p>
         </form>
     </dialog>

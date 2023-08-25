@@ -7,7 +7,11 @@ body {
     flex-direction: column;
     padding-top: 64px;
     align-items: center;
-    
+
+}
+
+.display {
+    display: none;
 }
 
 .title {
@@ -71,15 +75,41 @@ body {
     color: white;
 
 }
-.dialog {
+
+.beginBtn {
+    width: 120px;
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    background-color: salmon;
+    color: white;
+}
+
+.resetBtn {
+    padding: 5px 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: salmon;
+    color: white;
+}
+
+.dialog,
+.initDialog {
     border: 3px solid black;
     border-radius: 5px;
 }
+
+.initDialog {
+    width: 35%;
+}
+
 .row {
     display: flex;
     justify-content: center;
-    margin: 0 40px;
+    margin: 10px 40px;
 }
+
 .row button {
     padding: 5px 15px;
     background-color: #1677ff;
@@ -87,6 +117,28 @@ body {
     border-radius: 5px;
     border: none;
 }
+
+.initDialog .row {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.initDialog .row .tab {
+    flex-basis: 40%;
+    margin-right: 10px;
+}
+
+.initDialog .row .input {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.initDialog .row .enter {
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
 .confirm {
     margin-top: 10px;
 }
