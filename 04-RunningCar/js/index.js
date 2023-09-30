@@ -14,6 +14,7 @@ let setting = {
     direction: 'r',
     x: 0,
     y: 0,
+    isTurn: false
 }
 // 游戏框
 const box = document.querySelector('.box')
