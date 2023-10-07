@@ -10,22 +10,24 @@ const boxSize = {
 }
 // 配置信息
 const config = {
-    speed: 30,
-    isTurn: false,
+    speed: 25,
     direction: 'right'
 }
 const boxList = [
     {
         x: 0,
         y: 0,
+        direction: 'right'
     },
     {
         x: 25,
         y: 0,
+        direction: 'right'
     },
     {
         x: 50,
         y: 0,
+        direction: 'right'
     }
 ]
 
@@ -52,131 +54,114 @@ function selectInit() {
     })
 }
 function stright() {
-    if (config.isTurn) {
-        config.isTurn = false
-        box[0].classList.remove('right', 'left', 'up', 'down')
-        box[0].classList.add(config.direction)
-        if (config.direction === 'up' || config.direction === 'down') {
-            boxList[0].x = boxList[1].x
-            boxList[1].y = boxList[2].y
-            boxList[2].y = config.direction === 'up' ? boxList[2].y -= boxSize.height : boxList[2].y += boxSize.height
-            box[0].style.left = `${boxList[0].x}px`
-            box[1].style.top = `${boxList[1].y}px`
-            box[2].style.top = `${boxList[2].y}px`
+    for (let i = 0; i < boxList.length; i++) {
+        if (boxList[i].direction === 'right') {
+            // 车头与车身做不同处理
+            if (i === boxList.length - 1) {
+                boxList[i].x = boxList[i].x + config.speed >= (areaWidth - boxSize.width) ? (areaWidth - boxSize.width) : boxList[i].x + config.speed
+            } else {
+                // 车身移动位置两种处理，转弯和不转弯
+                // 根据车厢与车头的方向是否相等判断
+                if (boxList[i].direction === boxList[boxList.length - 1].direction) {
+                    // 如果是直走则要考虑游戏框的大小，控制游戏是否结束
+                    boxList[i].x = boxList[boxList.length - 1].x + config.speed >= (areaWidth - boxSize.width) ? areaWidth - boxSize.width * (boxList.length - i) : boxList[i + 1].x
+                } else {
+                    // 如果车辆正在拐弯，则直接移动到前一车厢的位置
+                    boxList[i].x = boxList[i + 1].x
+                }
+                boxList[i].y = boxList[i + 1].y
+                boxList[i].direction = boxList[i + 1].direction
+            }
+        } else if (boxList[i].direction === 'down') {
+            if (i === boxList.length - 1) {
+                boxList[i].y = boxList[i].y + config.speed >= (areaHeight - boxSize.height) ? (areaHeight - boxSize.height) : boxList[i].y + config.speed
+            } else {
+                if (boxList[i].direction === boxList[boxList.length - 1].direction) {
+                    boxList[i].y = boxList[boxList.length - 1].y + config.speed >= (areaHeight - boxSize.height) ? areaHeight - boxSize.height * (boxList.length - i) : boxList[i + 1].y
+                } else {
+                    boxList[i].y = boxList[i + 1].y
+                }
+                boxList[i].x = boxList[i + 1].x
+                boxList[i].direction = boxList[i + 1].direction
+            }
+
+        } else if (boxList[i].direction === 'left') {
+            if (i === boxList.length - 1) {
+                boxList[i].x = boxList[i].x - config.speed >= 0 ? boxList[i].x - config.speed : 0
+            } else {
+                if (boxList[i].direction === boxList[boxList.length - 1].direction) {
+                    boxList[i].x = boxList[boxList.length - 1].x - config.speed >= 0 ? boxList[i + 1].x : (boxList.length - 1 - i) * boxSize.width
+                } else {
+                    boxList[i].x = boxList[i + 1].x
+                }
+                boxList[i].y = boxList[i + 1].y
+                boxList[i].direction = boxList[i + 1].direction
+            }
+
         } else {
-            boxList[0].y = boxList[1].y
-            boxList[1].x = boxList[2].x
-            boxList[2].x = config.direction === 'right' ? boxList[2].x += boxSize.width : boxList[2].x -= boxSize.width
-            box[0].style.top = `${boxList[0].y}px`
-            box[1].style.left = `${boxList[1].x}px`
-            box[2].style.left = `${boxList[2].x}px`
+            if (i === boxList.length - 1) {
+                boxList[i].y = boxList[i].y - config.speed >= 0 ? boxList[i].y - config.speed : 0
+            } else {
+                if (boxList[i].direction === boxList[i + 1].direction) {
+                    boxList[i].y = boxList[boxList.length - 1].y - config.speed >= 0 ? boxList[i + 1].y : (boxList.length - 1 - i) * boxSize.height
+                } else {
+                    boxList[i].y = boxList[i + 1].y
+                }
+                boxList[i].x = boxList[i + 1].x
+                boxList[i].direction = boxList[i + 1].direction
+            }
+
         }
-    }
-    if (config.direction === 'right') {
-        boxList.forEach((item, index) => {
-            item.x += config.speed
-            let limit = areaWidth - (box.length  - index) * boxSize.width
-            item.x = item.x >= limit ? limit : item.x
-            box[index].style.left = `${item.x}px`
-        })
-    } else if (config.direction === 'left') {
-        boxList.forEach((item, index) => {
-            item.x -= config.speed
-            let limit = (box.length - 1-index) * boxSize.width
-            item.x = item.x <= limit ? limit : item.x
-            box[index].style.left = `${item.x}px`
-        })
-    } else if (config.direction === 'up') {
-        boxList.forEach((item, index) => {
-            item.y -= config.speed
-            let limit = (box.length -1- index) * boxSize.height
-            item.y = item.y <= limit ? limit : item.y
-            box[index].style.top = `${item.y}px`
-        })
-    } else {
-        boxList.forEach((item, index) => {
-            item.y += config.speed
-            let limit = areaHeight - (box.length- index) * boxSize.height
-            item.y = item.y >= limit ? limit : item.y
-            box[index].style.top = `${item.y}px`
-        })
+        box[i].style.left = `${boxList[i].x}px`
+        box[i].style.top = `${boxList[i].y}px`
+        // 控制车辆的方向
+        box[i].classList.remove('right', 'left', 'up', 'down')
+        box[i].classList.add(boxList[i].direction)
     }
     isOver()
 }
 // 改变火车方向
 function turnDirection() {
-    config.isTurn = true
-    box[1].classList.remove('right', 'left', 'up', 'down')
-    box[2].classList.remove('right', 'left', 'up', 'down')
-    box[1].classList.add(config.direction)
-    box[2].classList.add(config.direction)
-    if (config.direction === 'down') {
-        boxList[0].x = boxList[1].x
-        boxList[1].x = boxList[2].x
-        box[0].style.left = `${boxList[0].x}px`
-        box[1].style.left = `${boxList[1].x}px`
-        boxList[2].y += boxSize.height
-        box[2].style.top = `${boxList[2].y}px`
-    } else if (config.direction === 'up') {
-        boxList[0].x = boxList[1].x
-        boxList[1].x = boxList[2].x
-        box[0].style.left = `${boxList[0].x}px`
-        box[1].style.left = `${boxList[1].x}px`
-        boxList[2].y -= boxSize.height
-        box[2].style.top = `${boxList[2].y}px`
-    } else if (config.direction === 'left') {
-        boxList[0].y = boxList[1].y
-        boxList[1].y = boxList[2].y
-        box[0].style.top = `${boxList[0].y}px`
-        box[1].style.top = `${boxList[1].y}px`
-        boxList[2].x -= boxSize.width
-        box[2].style.left = `${boxList[2].x}px`
-    } else if (config.direction === 'right') {
-        boxList[0].y = boxList[1].y
-        boxList[1].y = boxList[2].y
-        box[0].style.top = `${boxList[0].y}px`
-        box[1].style.top = `${boxList[1].y}px`
-        boxList[2].x += boxSize.width
-        box[2].style.left = `${boxList[2].x}px`
-    }
-
+    boxList[2].direction = config.direction
 }
-function keyEvent() {
-    window.addEventListener('keydown', (event) => {
-        if (event.key == 'ArrowUp') {
-            if (config.direction !== 'up' && config.direction !== 'down') {
-                config.direction = 'up'
-                turnDirection()
-            }
-        } else if (event.key == 'ArrowDown') {
-            if (config.direction !== 'down' && config.direction !== 'up') {
-                config.direction = 'down'
-                turnDirection()
-            }
-
-        } else if (event.key == 'ArrowLeft') {
-            if (config.direction !== 'left' && config.direction !== 'right') {
-                config.direction = 'left'
-                turnDirection()
-            }
-
-        } else if (event.key == 'ArrowRight') {
-            if (config.direction !== 'right' && config.direction !== 'left') {
-                config.direction = 'right'
-                turnDirection()
-            }
+function handleKey(event) {
+    console.log(1);
+    if (event.key == 'ArrowUp') {
+        if (config.direction !== 'up' && config.direction !== 'down') {
+            config.direction = 'up'
+            turnDirection()
+        }
+    } else if (event.key == 'ArrowDown') {
+        if (config.direction !== 'down' && config.direction !== 'up') {
+            config.direction = 'down'
+            turnDirection()
         }
 
-    })
+    } else if (event.key == 'ArrowLeft') {
+        if (config.direction !== 'left' && config.direction !== 'right') {
+            config.direction = 'left'
+            turnDirection()
+        }
+
+    } else if (event.key == 'ArrowRight') {
+        if (config.direction !== 'right' && config.direction !== 'left') {
+            config.direction = 'right'
+            turnDirection()
+        }
+    }
+}
+function keyEvent() {
+    window.addEventListener('keydown',handleKey)
 }
 // 游戏结束
 function isOver() {
-    if ((boxList[2].y === 0 && config.direction === 'up') || (boxList[2].y+boxSize.height === areaHeight && config.direction === 'down') || (boxList[2].x === 0 && config.direction === 'left') || (boxList[2].x+boxSize.width === areaWidth && config.direction === 'right')) {
+    if ((boxList[2].y === 0 && config.direction === 'up') || (boxList[2].y + boxSize.height === areaHeight && config.direction === 'down') || (boxList[2].x === 0 && config.direction === 'left') || (boxList[2].x + boxSize.width  === areaWidth && config.direction === 'right')) {
         overGame()
     }
 }
 let endTimer = null
 function overGame() {
+    window.removeEventListener('keydown', handleKey)
     if (!endTimer) {
         endTimer = setTimeout(() => {
             alert("游戏结束")
