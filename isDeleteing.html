@@ -5,10 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .contrainer {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        .doc {
+            flex-basis: 90%;
+            border: 1px solid black;
+            margin: 10px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        button {
+            width: 60%;
+            border: none;
+            border-radius: 5px;
+            background-color: #55aaff;
+            color: white;
+            padding: 8px 0;
+        }
+    </style>
 </head>
 
 <body>
-    <div>这是一个文档容器</div>
+    <div class="contrainer">
+        <div class="doc"></div>
+        <!-- <iframe src='https://hnuln.github.io/demos/1.docx' class="doc"></iframe> -->
+        <div class="row">
+            <button>签署</button>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.querySelector(button)
+
+        // 点击签署，页面跳转
+        btn.addEventListener('click',()=>{
+            uni.postMessage({
+                data: {
+                    type: 'sign'
+                }
+            })
+        })
+    </script>
 </body>
 
 </html>
