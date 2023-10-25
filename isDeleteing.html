@@ -61,6 +61,7 @@
 
         // 点击签署，页面跳转
         btn.addEventListener('click',()=>{
+            console.log("向程序发送信息")
             uni.postMessage({
                 data: {
                     type: 'sign'
