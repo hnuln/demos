@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
     <style>
         html,
         body {
@@ -33,12 +33,12 @@
 
         .row {
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             margin: 10px 0;
         }
 
         button {
-            width: 60%;
+            width: 25%;
             border: none;
             border-radius: 5px;
             background-color: #55aaff;
@@ -54,11 +54,11 @@
 <body>
     <div class="contrainer">
         <div class="doc">
-            <img src="http://localhost:8081/api/doc/getSign" alt="">
+            <!-- <img src="http://localhost:8081/api/doc/getSign" alt=""> -->
         </div>
         <!-- <iframe src='https://hnuln.github.io/demos/1.docx' class="doc"></iframe> -->
         <div class="row">
-            <button>签署</button>
+            <!-- <button>签署</button> -->
         </div>
     </div>
 
@@ -72,38 +72,66 @@
             });
         
         });
-        // window.onload = function(){
-        //     // window.location.href 获取地址
-        //     let url = window.location.href
-        //     let p = url.split('?')[1]
-        //     let params = new URLSearchParams(p)
-        //     // console.log(params.get('path')) //1
-        //     if(params.get('request')){
-        //         axios({
-        //             url: 'http://localhost:8081/api/doc/getSign',
-        //             method: 'GET'
-        //         }).then(res=>{
-        //             console.log(res);
-        //         }).catch(err=>{
-        //             consoloe.log(err)
-        //         })
-        //     }
-        // }
-        const btn = document.querySelector('button')
+        window.onload = function(){
+            // window.location.href 获取地址
+            let url = window.location.href
+            let p = url.split('?')[1]
+            let params = new URLSearchParams(p)
+            // console.log(params.get('path')) //1
+            if(params.get('request')){
+                // 签字状态
+                // 1.底部保存取消按钮
+                // 2.文档部分渲染签字图片
+                const btnSubmit = document.createElement('button')
+                const btnCancel = document.createElement('button')
+                btnSubmit.innerHTML = '保存'
+                btnCancel.innerHTML = '取消'
+                document.querySelector('.row').appendChild(btnSubmit)
+                document.querySelector('.row').appendChild(btnCancel)
+                btnCancel.addEventListener('click',()=>{
+                    console.log("取消");
+                })
+                btnSubmit.addEventListener('click',()=>{
+                    console.log("保存");
+                })
+                const img = document.createElement('img')
+                img.src = 'http://localhost:8081/api/doc/getSign'
+                document.querySelector('.doc').appendChild(img)
+            }else {
+                // 预览文件状态
+                // 1.底部签署按钮
+                const btnSign = document.createElement('button')
+                btnSign.innerHTML = '签署'
+                document.querySelector('.row').appendChild(btnSign)
+                btnSign.addEventListener('click', () => {
+                    console.log("向程序发送信息")
+                    uni.postMessage({
+                        data: {
+                            type: 'sign'
+                        }
+                    })
+                    // uni.webView.navigateBack()
+                    uni.webView.navigateTo({
+                        url: '/pages/signatureBoard/signatureBoard',
+                    })
+                })
+            }
+        }
+        // const btn = document.querySelector('button')
 
-        // 点击签署，页面跳转
-        btn.addEventListener('click', () => {
-            console.log("向程序发送信息")
-            uni.postMessage({
-                data: {
-                    type: 'sign'
-                }
-            })
-            // uni.webView.navigateBack()
-            uni.webView.navigateTo({
-                url: '/pages/signatureBoard/signatureBoard',
-            })
-        })
+        // // 点击签署，页面跳转
+        // btn.addEventListener('click', () => {
+        //     console.log("向程序发送信息")
+        //     uni.postMessage({
+        //         data: {
+        //             type: 'sign'
+        //         }
+        //     })
+        //     // uni.webView.navigateBack()
+        //     uni.webView.navigateTo({
+        //         url: '/pages/signatureBoard/signatureBoard',
+        //     })
+        // })
 
         
     </script>
