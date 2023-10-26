@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         html,
         body {
@@ -44,12 +45,17 @@
             color: white;
             padding: 8px 0;
         }
+        img {
+            width: 30%;
+        }
     </style>
 </head>
 
 <body>
     <div class="contrainer">
-        <div class="doc"></div>
+        <div class="doc">
+            <img src="http://localhost:8081/api/doc/getSign" alt="">
+        </div>
         <!-- <iframe src='https://hnuln.github.io/demos/1.docx' class="doc"></iframe> -->
         <div class="row">
             <button>签署</button>
@@ -64,7 +70,25 @@
             uni.webView.getEnv(function (res) {
                 console.log('当前环境：' + JSON.stringify(res));
             });
+        
         });
+        // window.onload = function(){
+        //     // window.location.href 获取地址
+        //     let url = window.location.href
+        //     let p = url.split('?')[1]
+        //     let params = new URLSearchParams(p)
+        //     // console.log(params.get('path')) //1
+        //     if(params.get('request')){
+        //         axios({
+        //             url: 'http://localhost:8081/api/doc/getSign',
+        //             method: 'GET'
+        //         }).then(res=>{
+        //             console.log(res);
+        //         }).catch(err=>{
+        //             consoloe.log(err)
+        //         })
+        //     }
+        // }
         const btn = document.querySelector('button')
 
         // 点击签署，页面跳转
@@ -75,10 +99,13 @@
                     type: 'sign'
                 }
             })
+            uni.webView.back()
             uni.webView.navigateTo({
                 url: '/pages/signatureBoard/signatureBoard',
             })
         })
+
+        
     </script>
 </body>
 
