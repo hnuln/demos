@@ -26,8 +26,9 @@
         }
 
         .doc {
+            position: relative;
             flex-basis: 90%;
-            border: 1px solid black;
+            /* border: 1px solid black; */
             margin: 10px;
         }
 
@@ -47,10 +48,12 @@
         }
         img {
             position: absolute;
+            border: 2px dashed #868686;
             top: 20px;
             left: 20px;
-            width: 30%;
+            width: 20%;
         }
+        
         .pdf{
             width: 100%;
             height: 100%;
@@ -62,7 +65,7 @@
     <div class="contrainer">
         <div class="doc">
             <!-- <img src="http://localhost:8081/api/doc/getSign" alt=""> -->
-            <iframe src='./demo.pdf' class="pdf"></iframe>
+            <iframe src='./demo.pdf#toolbar=0' class="pdf" frameborder="0"></iframe>
         </div>
         
         <div class="row">
@@ -105,6 +108,7 @@
                 const img = document.createElement('img')
                 img.src = 'http://localhost:8081/api/doc/getSign'
                 document.querySelector('.doc').appendChild(img)
+                move(img)
             }else {
                 // 预览文件状态
                 // 1.底部签署按钮
@@ -125,21 +129,69 @@
                 })
             }
         }
-        // const btn = document.querySelector('button')
+        
+        // 移动图片
+        function move(img){
+            // 父盒子
+            const doc = document.querySelector('.doc')
+            let startX = 0, startY = 0
+            img.addEventListener('touchstart',(e)=>{
+                // console.log(e)
+                e.stopPropagation()
+                const target = e.targetTouches[0]
+                startX = target.clientX-  img.offsetLeft // 起点相对于父盒子的位置
+                startY = target.clientY - img.offsetTop
+                document.addEventListener("touchmove", defaultEvent);
+            })
+            img.addEventListener('touchmove',(e)=>{
+                e.stopPropagation()
+                // console.log(e);
+                const target = e.targetTouches[0]
+                // 实时更改位置
+                img.style.left = target.clientX - startX +'px';
+                img.style.top = target.clientY - startY +'px';
+                InitBoundary(img)
+            })
+            img.addEventListener('touchend',()=>{
+                document.removeEventListener('touchmove',defaultEvent)
+            })
+        }
 
-        // // 点击签署，页面跳转
-        // btn.addEventListener('click', () => {
-        //     console.log("向程序发送信息")
-        //     uni.postMessage({
-        //         data: {
-        //             type: 'sign'
-        //         }
-        //     })
-        //     // uni.webView.navigateBack()
-        //     uni.webView.navigateTo({
-        //         url: '/pages/signatureBoard/signatureBoard',
-        //     })
-        // })
+        // 边界判断
+        function InitBoundary(element){
+            // 签名的绝对定位
+            const elLeft = element.offsetLeft
+            const elTop = element.offsetTop
+            // 签名元素的大小
+            const elWidth = element.offsetWidth
+            const elHeight = element.offsetHeight
+            // 父元素的宽高
+            const doc = document.querySelector('.doc')
+            const docWidth = doc.offsetWidth
+            const docHeight = doc.offsetHeight
+            // 左边界
+            if(elLeft<=0){
+                element.style.left = 0+'px'
+            }
+            // 右边界
+            if((elLeft+elWidth)>=docWidth){
+                element.style.left = docWidth-elWidth+'px'
+            }
+            // 上边界
+            if(elTop<=0){
+                element.style.top = 0 + 'px'
+            }
+            // 下边界
+            if((elTop+elHeight)>=docHeight){
+                element.style.top = docHeight - elHeight + 'px'
+            }
+
+        }
+
+        function defaultEvent(e){
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
         
     </script>
