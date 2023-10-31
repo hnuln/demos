@@ -47,11 +47,30 @@
             padding: 8px 0;
         }
         img {
+            /* border: 2px dashed #868686; */
+            width: 100%;
+            height: 100%;
+        }
+
+        .img{
+            display: none;
             position: absolute;
-            border: 2px dashed #868686;
             top: 20px;
             left: 20px;
             width: 20%;
+        }
+        .controller{
+            border: 1px dashed black;
+        }
+        .after{
+            position: absolute;
+            display: none;
+            width: 6px;
+            height: 6px;
+            top: 99%;
+            left: 99%;
+            border-radius: 3px;
+            background-color: black;
         }
         
         .pdf{
@@ -64,8 +83,11 @@
 <body>
     <div class="contrainer">
         <div class="doc">
-            <!-- <img src="http://localhost:8081/api/doc/getSign" alt=""> -->
-            <iframe src='./demo.pdf#toolbar=0' class="pdf" frameborder="0"></iframe>
+            <!-- <img src="http://localhost:8081/api/doc/getSign" alt="" class="controlller"> -->
+            <div class="img">
+                <span class="after"></span>
+            </div>
+            <iframe src='./ex1.pdf#toolbar=0' class="pdf" frameborder="0"></iframe>
         </div>
         
         <div class="row">
@@ -81,8 +103,8 @@
             uni.webView.getEnv(function (res) {
                 console.log('当前环境：' + JSON.stringify(res));
             });
-        
         });
+        
         window.onload = function(){
             // window.location.href 获取地址
             let url = window.location.href
@@ -93,6 +115,7 @@
                 // 签字状态
                 // 1.底部保存取消按钮
                 // 2.文档部分渲染签字图片
+                document.querySelector('.img').style.display = 'block'
                 const btnSubmit = document.createElement('button')
                 const btnCancel = document.createElement('button')
                 btnSubmit.innerHTML = '保存'
@@ -100,15 +123,22 @@
                 document.querySelector('.row').appendChild(btnSubmit)
                 document.querySelector('.row').appendChild(btnCancel)
                 btnCancel.addEventListener('click',()=>{
-                    console.log("取消");
+                    uni.miniProgram.navigateBack({})
+                    // console.log("取消");
+                    // uni.postMessage({
+                    //     data: {
+                    //         type: 'back'
+                    //     }
+                    // })
                 })
                 btnSubmit.addEventListener('click',()=>{
                     console.log("保存");
                 })
                 const img = document.createElement('img')
                 img.src = 'http://localhost:8081/api/doc/getSign'
-                document.querySelector('.doc').appendChild(img)
-                move(img)
+                const imgBox = document.querySelector('.img')
+                imgBox.appendChild(img)
+                // console.log(document.querySelector('.img').getBoundingClientRect());
             }else {
                 // 预览文件状态
                 // 1.底部签署按钮
@@ -117,11 +147,6 @@
                 document.querySelector('.row').appendChild(btnSign)
                 btnSign.addEventListener('click', () => {
                     console.log("向程序发送信息")
-                    uni.postMessage({
-                        data: {
-                            type: 'sign'
-                        }
-                    })
                     // uni.webView.navigateBack()
                     uni.webView.navigateTo({
                         url: '/pages/signatureBoard/signatureBoard',
@@ -129,32 +154,74 @@
                 })
             }
         }
-        
+        document.addEventListener('click',(e)=>{
+            // console.log(e.target.tagName==='IMG');
+            const imgBox = document.querySelector('.img')
+            console.log(e);
+            if(e.target.tagName==='IMG'){
+                imgBox.classList.add('controller')
+                document.querySelector('.after').style.display = 'block'
+                // 移动位置
+                move(imgBox)
+                // 缩放
+                zoom(imgBox)
+            }else {
+                imgBox.classList.remove('controller')
+                 document.querySelector('.after').style.display = 'none'
+                remove(imgBox)
+                // rezoom(imgBox)
+            }
+        })
+
+        // 缩放部分
+        function zoom(imgBox){
+            const after = document.querySelector('.after')
+            after.addEventListener('touchmove',(e)=>{
+                e.stopPropagation()
+                const target = e.targetTouches[0]
+                // console.log(imgBox.getBoundingClientRect().left);
+                const clientList = imgBox.getBoundingClientRect()
+                imgBox.style.width = (target.clientX - clientList.left)+'px'
+                imgBox.style.height = (target.clientY - clientList.top)+'px'
+            })
+        }
+        // 移动部分
+        function touchstart(e){
+            const img = document.querySelector('.img')
+            // console.log(e)
+            e.stopPropagation()
+            const target = e.targetTouches[0]
+            startX = target.clientX - img.offsetLeft // 起点相对于父盒子的位置
+            startY = target.clientY - img.offsetTop
+            document.addEventListener("touchmove", defaultEvent);
+        }
+        function touchmove(e){
+            const img = document.querySelector('.img')
+            e.stopPropagation()
+            // console.log(e);
+            const target = e.targetTouches[0]
+            // 实时更改位置
+            img.style.left = target.clientX - startX + 'px';
+            img.style.top = target.clientY - startY + 'px';
+            InitBoundary(img)
+        }
+        function touchend(e){
+            document.removeEventListener('touchmove', defaultEvent)
+        }
         // 移动图片
         function move(img){
             // 父盒子
             const doc = document.querySelector('.doc')
             let startX = 0, startY = 0
-            img.addEventListener('touchstart',(e)=>{
-                // console.log(e)
-                e.stopPropagation()
-                const target = e.targetTouches[0]
-                startX = target.clientX-  img.offsetLeft // 起点相对于父盒子的位置
-                startY = target.clientY - img.offsetTop
-                document.addEventListener("touchmove", defaultEvent);
-            })
-            img.addEventListener('touchmove',(e)=>{
-                e.stopPropagation()
-                // console.log(e);
-                const target = e.targetTouches[0]
-                // 实时更改位置
-                img.style.left = target.clientX - startX +'px';
-                img.style.top = target.clientY - startY +'px';
-                InitBoundary(img)
-            })
-            img.addEventListener('touchend',()=>{
-                document.removeEventListener('touchmove',defaultEvent)
-            })
+            img.addEventListener('touchstart',touchstart)
+            img.addEventListener('touchmove',touchmove)
+            img.addEventListener('touchend',touchend)
+        }
+
+        function remove(img){
+            img.removeEventListener('touchstart',touchstart)
+            img.removeEventListener('touchmove', touchmove)
+            img.removeEventListener('touchend', touchend)
         }
 
         // 边界判断
