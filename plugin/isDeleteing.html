@@ -46,23 +46,26 @@
             color: white;
             padding: 8px 0;
         }
+
         img {
             /* border: 2px dashed #868686; */
             width: 100%;
             height: 100%;
         }
 
-        .img{
+        .img {
             display: none;
             position: absolute;
             top: 20px;
             left: 20px;
             width: 20%;
         }
-        .controller{
+
+        .controller {
             border: 1px dashed black;
         }
-        .after{
+
+        .after {
             position: absolute;
             display: none;
             width: 6px;
@@ -72,8 +75,8 @@
             border-radius: 3px;
             background-color: black;
         }
-        
-        .pdf{
+
+        .pdf {
             width: 100%;
             height: 100%;
         }
@@ -89,7 +92,7 @@
             </div>
             <iframe src='./ex1.pdf#toolbar=0' class="pdf" frameborder="0"></iframe>
         </div>
-        
+
         <div class="row">
             <!-- <button>签署</button> -->
         </div>
@@ -97,6 +100,10 @@
 
     <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
     <script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.2.js"></script>
+    <script type="text/javascript" src="./utils/html2canvas.js"></script>
+    <script type="text/javascript" src="./utils/jsPdf.debug.js"></script>
+
+
     <script>
         // h5与小程序通信环境监听
         document.addEventListener('UniAppJSBridgeReady', function () {
@@ -104,14 +111,14 @@
                 console.log('当前环境：' + JSON.stringify(res));
             });
         });
-        
-        window.onload = function(){
+
+        window.onload = function () {
             // window.location.href 获取地址
             let url = window.location.href
             let p = url.split('?')[1]
             let params = new URLSearchParams(p)
             // console.log(params.get('path')) //1
-            if(params.get('request')){
+            if (params.get('request')) {
                 // 签字状态
                 // 1.底部保存取消按钮
                 // 2.文档部分渲染签字图片
@@ -120,26 +127,16 @@
                 const btnCancel = document.createElement('button')
                 btnSubmit.innerHTML = '保存'
                 btnCancel.innerHTML = '取消'
+                btnCancel.classList.add('cancel')
+                btnSubmit.classList.add('submit')
                 document.querySelector('.row').appendChild(btnSubmit)
                 document.querySelector('.row').appendChild(btnCancel)
-                btnCancel.addEventListener('click',()=>{
-                    uni.miniProgram.navigateBack({})
-                    // console.log("取消");
-                    // uni.postMessage({
-                    //     data: {
-                    //         type: 'back'
-                    //     }
-                    // })
-                })
-                btnSubmit.addEventListener('click',()=>{
-                    console.log("保存");
-                })
                 const img = document.createElement('img')
                 img.src = 'http://localhost:8081/api/doc/getSign'
                 const imgBox = document.querySelector('.img')
                 imgBox.appendChild(img)
                 // console.log(document.querySelector('.img').getBoundingClientRect());
-            }else {
+            } else {
                 // 预览文件状态
                 // 1.底部签署按钮
                 const btnSign = document.createElement('button')
@@ -153,40 +150,72 @@
                     })
                 })
             }
+            clickEvent()
         }
-        document.addEventListener('click',(e)=>{
+
+
+        function clickEvent() {
+            const btnCancel = document.querySelector('.cancel')
+            const btnSubmit = document.querySelector('.submit')
+            // 保存、取消的点击事件
+            btnCancel.addEventListener('click', () => {
+                uni.miniProgram.navigateBack({})
+                // console.log("取消");
+                // uni.postMessage({
+                //     data: {
+                //         type: 'back'
+                //     }
+                // })
+            })
+            btnSubmit.addEventListener('click', () => {
+                console.log("保存");
+                
+            })
+        }
+        // 
+        document.querySelector('.pdf').addEventListener('scroll',(e)=>{
+            console.log(e);
+        })
+        // 移动缩放的开关显示
+        document.querySelector('.pdf').contentDocument.addEventListener('click',()=>{
+            const imgBox = document.querySelector('.img')
+            imgBox.classList.remove('controller')
+            document.querySelector('.after').style.display = 'none'
+            remove(imgBox)
+        })
+        document.addEventListener('click', (e) => {
             // console.log(e.target.tagName==='IMG');
             const imgBox = document.querySelector('.img')
             console.log(e);
-            if(e.target.tagName==='IMG'){
+            if (e.target.tagName === 'IMG') {
                 imgBox.classList.add('controller')
                 document.querySelector('.after').style.display = 'block'
                 // 移动位置
                 move(imgBox)
                 // 缩放
                 zoom(imgBox)
-            }else {
+            } else {
                 imgBox.classList.remove('controller')
-                 document.querySelector('.after').style.display = 'none'
+                document.querySelector('.after').style.display = 'none'
                 remove(imgBox)
                 // rezoom(imgBox)
             }
         })
 
         // 缩放部分
-        function zoom(imgBox){
+        function zoom(imgBox) {
             const after = document.querySelector('.after')
-            after.addEventListener('touchmove',(e)=>{
+            after.addEventListener('touchmove', (e) => {
                 e.stopPropagation()
                 const target = e.targetTouches[0]
                 // console.log(imgBox.getBoundingClientRect().left);
                 const clientList = imgBox.getBoundingClientRect()
-                imgBox.style.width = (target.clientX - clientList.left)+'px'
-                imgBox.style.height = (target.clientY - clientList.top)+'px'
+                imgBox.style.width = (target.clientX - clientList.left) + 'px'
+                imgBox.style.height = (target.clientY - clientList.top) + 'px'
             })
         }
         // 移动部分
-        function touchstart(e){
+        function touchstart(e) {
             const img = document.querySelector('.img')
             // console.log(e)
             e.stopPropagation()
@@ -195,7 +224,7 @@
             startY = target.clientY - img.offsetTop
             document.addEventListener("touchmove", defaultEvent);
         }
-        function touchmove(e){
+        function touchmove(e) {
             const img = document.querySelector('.img')
             e.stopPropagation()
             // console.log(e);
@@ -205,27 +234,27 @@
             img.style.top = target.clientY - startY + 'px';
             InitBoundary(img)
         }
-        function touchend(e){
+        function touchend(e) {
             document.removeEventListener('touchmove', defaultEvent)
         }
         // 移动图片
-        function move(img){
+        function move(img) {
             // 父盒子
             const doc = document.querySelector('.doc')
             let startX = 0, startY = 0
-            img.addEventListener('touchstart',touchstart)
-            img.addEventListener('touchmove',touchmove)
-            img.addEventListener('touchend',touchend)
+            img.addEventListener('touchstart', touchstart)
+            img.addEventListener('touchmove', touchmove)
+            img.addEventListener('touchend', touchend)
         }
 
-        function remove(img){
-            img.removeEventListener('touchstart',touchstart)
+        function remove(img) {
+            img.removeEventListener('touchstart', touchstart)
             img.removeEventListener('touchmove', touchmove)
             img.removeEventListener('touchend', touchend)
         }
 
         // 边界判断
-        function InitBoundary(element){
+        function InitBoundary(element) {
             // 签名的绝对定位
             const elLeft = element.offsetLeft
             const elTop = element.offsetTop
@@ -237,30 +266,30 @@
             const docWidth = doc.offsetWidth
             const docHeight = doc.offsetHeight
             // 左边界
-            if(elLeft<=0){
-                element.style.left = 0+'px'
+            if (elLeft <= 0) {
+                element.style.left = 0 + 'px'
             }
             // 右边界
-            if((elLeft+elWidth)>=docWidth){
-                element.style.left = docWidth-elWidth+'px'
+            if ((elLeft + elWidth) >= docWidth) {
+                element.style.left = docWidth - elWidth + 'px'
             }
             // 上边界
-            if(elTop<=0){
+            if (elTop <= 0) {
                 element.style.top = 0 + 'px'
             }
             // 下边界
-            if((elTop+elHeight)>=docHeight){
+            if ((elTop + elHeight) >= docHeight) {
                 element.style.top = docHeight - elHeight + 'px'
             }
 
         }
 
-        function defaultEvent(e){
+        function defaultEvent(e) {
             e.preventDefault();
             e.stopPropagation();
         }
 
-        
+
     </script>
 </body>
 
