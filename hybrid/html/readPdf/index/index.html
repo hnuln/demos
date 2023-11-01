@@ -61,7 +61,7 @@
 			document.getElementById('signUrl').src = './sign.jpeg' || signImgUrl;
 
 			let name = getUrlParam('docName');
-			document.title = decodeURIComponent(name||'document');
+			document.title = decodeURIComponent(name || 'document');
 			// let myHeight = 550;
 			// document.getElementById('myPDF').style.height = myHeight + 'px';
 			$("#myPDF").pdf({
@@ -72,7 +72,7 @@
 			let pdfinitHeight = oPdfbox.clientHeight;
 			let pdfinitScale = oPdfbox.style.transform.split('(')[1].split(')')[0].split(',');
 			let h = pdfinitHeight * pdfinitScale;
-			
+
 			// document.getElementById('father-box').style.height = h + 'px';
 		});
 		window.onload = function () {
@@ -112,13 +112,14 @@
 					let pdfinitHeight = oPdfbox.clientHeight;
 					let pdfinitScale = oPdfbox.style.transform.split('(')[1].split(')')[0].split(',');
 					let pdf_height = pdfinitHeight * pdfinitScale;
+					let pdf_width = oPdfbox.clientWidth * pdfinitScale
 					uni.postMessage({
 						data: {
 							signDatas: {
 								page_no: page,
 								image_id: '',
 								pdf_height: pdf_height,
-								pdf_width: oPdfbox.clientWidth,
+								pdf_width: pdf_width,
 								width: oSignImg.offsetWidth,
 								height: oSignImg.offsetHeight,
 								top: oSignImg.offsetTop,
@@ -188,7 +189,7 @@
 						}
 					}
 				}
-				
+
 
 				function defaultEvent(e) {
 					e.preventDefault();
