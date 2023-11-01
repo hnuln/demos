@@ -109,10 +109,11 @@
 					page = parseInt(page);
 					var oPDFBOX = document.getElementById('myPDF');
 					let oPdfbox = document.getElementById('my-pdf-outerdiv');
-					let pdfinitHeight = oPdfbox.clientHeight;
+					const pdfA = document.querySelector('.pdf-viewer')
+					let pdfinitHeight = pdfA.clientHeight;
 					let pdfinitScale = oPdfbox.style.transform.split('(')[1].split(')')[0].split(',');
 					let pdf_height = pdfinitHeight * pdfinitScale;
-					let pdf_width = oPdfbox.clientWidth * pdfinitScale
+					let pdf_width = pdfA.clientWidth * pdfinitScale
 					uni.postMessage({
 						data: {
 							signDatas: {
