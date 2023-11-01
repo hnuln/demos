@@ -37,7 +37,7 @@ body {
 	background-color: #007AFF;
 } */
 .my-btn-box {
-/* 	position: fixed;
+	/* 	position: fixed;
 	left: 0;
 	bottom: 0;
 	right: 0; */
@@ -59,10 +59,12 @@ body {
 	border-radius: 6px;
 	border: 1px solid #ddd;
 }
+
 .my-cancal {
 	background-color: #fff;
 	color: #222;
 }
+
 .my-sure {
 	color: #fff;
 	background-color: #007AFF;
