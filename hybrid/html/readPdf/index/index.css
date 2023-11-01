@@ -63,7 +63,9 @@ body {
 .my-btn-item {
 	flex: 1;
 	text-align: center;
-	line-height: 40px;
+	padding: 10px 0;
+	margin: 5px 0;
+	/* line-height: 40px; */
 	border-radius: 6px;
 	border: 1px solid #ddd;
 }
@@ -78,9 +80,14 @@ body {
 	background-color: #007AFF;
 	margin-bottom: 2px;
 }
+.sign{
+	background-color: #007AFF;
+	color: #fff;
+}
 
 /* 移动盒子 */
 .father-box {
+	display: none;
 	position: absolute;
 	top: 40px;
 	left: 0;
