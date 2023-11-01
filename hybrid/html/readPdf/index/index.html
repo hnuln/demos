@@ -22,8 +22,8 @@
 		</div>
 		<div class="my-btn-box">
 			<div class="my-btn-content">
-				<div class="my-btn-item my-sure" onclick="onSubmit()">保存</div>
-				<div class="my-btn-item my-cancal" onclick="cancal()">取消</div>
+				<div class="my-btn-item my-sure" >保存</div>
+				<div class="my-btn-item my-cancal">取消</div>
 			</div>
 		</div>
 	</div>
@@ -47,11 +47,11 @@
 			return null; // 返回参数值
 		};
 		// 取消
-		function cancal() {
+		document.querySelector('.my-cancal').addEventListener('click',()=>{
 			uni.webView.navigateBack()
-		}
+		})
 		// 确定
-		function onSubmit() {
+		document.querySelector('.my-sure',()=>{
 			let oSignImg = document.getElementById('my-signImg');
 			var oTimeImg = document.getElementById('my-timeImg');
 			var page = localStorage.getItem("myPageNum");
@@ -75,7 +75,7 @@
 					}
 				}
 			});
-		}
+		})
 		// 初始化pdf等
 		$(function () {
 			let url = decodeURIComponent(getUrlParam('url'));
